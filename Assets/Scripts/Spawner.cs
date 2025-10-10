@@ -13,7 +13,7 @@ public class Spawner : MonoBehaviour
     private float rangoXMinimo = -34f; // Valor mínimo de X
     private float rangoXMaximo = 34f; // Valor máximo de X
 
-    public float tiempoEntreBalas = 1f; // Tiempo en segundos entre cada mensaje
+    public float tiempoEntreBalas = 0.5f; // Tiempo en segundos entre cada mensaje
 
     private void Start()
     {

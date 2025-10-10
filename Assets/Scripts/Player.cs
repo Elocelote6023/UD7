@@ -9,7 +9,16 @@ public class Player : MonoBehaviour
     private bool invencibilidad;
     public int VidaActual, VidaMaxima;
     public GameObject Jugador;
-    
+
+    public GameObject corazon1;
+    public GameObject corazon2;
+    public GameObject corazon3;
+
+    public GameObject corazonVacio1;
+    public GameObject corazonVacio2;
+    public GameObject corazonVacio3;
+
+
     private float tiempoTranscurrido = 0f;
     private float tiempoTotal = 3f; // 3 segundos en total
 
@@ -19,6 +28,15 @@ public class Player : MonoBehaviour
 
         invencibilidad = false;
         VidaActual = VidaMaxima;
+
+        corazon1.SetActive(true);
+        corazon2.SetActive(true);
+        corazon3.SetActive(true);
+
+        corazonVacio1.SetActive(false);
+        corazonVacio2.SetActive(false);
+        corazonVacio3.SetActive(false);
+
     }
 
     void Update()
@@ -57,6 +75,21 @@ public class Player : MonoBehaviour
             VidaActual--;
             invencibilidad = true;
             tiempoTranscurrido += Time.deltaTime;
+
+            corazon1.SetActive(false);
+            corazonVacio1.SetActive(true);
+
+            if (VidaActual == 1)
+            {
+                corazon2.SetActive(false);
+                corazonVacio2.SetActive(true);
+            }
+            else if (VidaActual == 0)
+            {
+                corazon3.SetActive(false);
+                corazonVacio3.SetActive(true);
+            }
+
         }
     }
 }
