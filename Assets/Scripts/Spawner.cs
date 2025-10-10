@@ -19,7 +19,7 @@ public class Spawner : MonoBehaviour
 
     [Header("Cámara")]
     public Camera camara;
-    public float margen = 0.5f; // un poco de espacio para no salir del borde
+    public float margen = 0.5f;
 
     private float rangoXMinimo;
     private float rangoXMaximo;
