@@ -992,6 +992,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aebcfbf272c7db4a9145cf6ed44cf49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PointSystem: {fileID: 1752747003}
+  dificultad: 0
   proyectilPrefab: {fileID: 1230481692}
   spawnPoint: {fileID: 541112386}
   fuerza: 10
@@ -1804,7 +1806,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edc6ae30e114731489cc3d89e31056b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  time: 0
+  counter: 0
+  tiempo: 0
+  dificultad: 0
+  dificultadFake: 0
   contador: {fileID: 2005597129}
 --- !u!1 &1861964708
 GameObject:
