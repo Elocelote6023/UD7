@@ -4,21 +4,44 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    public GameObject PointSystem;
+    public float dificultad;
+
     public GameObject proyectilPrefab; // Referencia al prefab del proyectil
     public Transform spawnPoint; // Punto de origen del disparo
     public float fuerza = 10f; // Fuerza aplicada al proyectil
 
     public Transform objetoATeletransportar; // Objeto que se teletransportará
-    public float intervaloTeletransporte = 2f; // Intervalo de tiempo entre teletransportes
+    public float intervaloTeletransporte; // Intervalo de tiempo entre teletransportes
     private float rangoXMinimo = -34f; // Valor mínimo de X
     private float rangoXMaximo = 34f; // Valor máximo de X
 
-    public float tiempoEntreBalas = 0.5f; // Tiempo en segundos entre cada mensaje
+    public float tiempoEntreBalas; // Tiempo en segundos entre cada mensaje
+
+
+
+    
 
     private void Start()
     {
-        InvokeRepeating("TeletransportarObjeto", 0f, intervaloTeletransporte);
+        StartCoroutine(TP());
         StartCoroutine(EnviarBala());
+
+    }
+
+    private void Update()
+    {
+        intervaloTeletransporte = PointSystem.GetComponent<PointSystem>().dificultad;
+        tiempoEntreBalas = PointSystem.GetComponent<PointSystem>().dificultad;
+    }
+
+    private IEnumerator TP()
+    {
+        while (true)
+        {
+            TeletransportarObjeto();
+            yield return new WaitForSeconds(intervaloTeletransporte);
+        }
     }
 
     private IEnumerator EnviarBala()
