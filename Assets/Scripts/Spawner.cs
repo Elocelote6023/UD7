@@ -1,38 +1,61 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    [Header("Referencias")]
     public GameObject PointSystem;
+    public GameObject proyectilPrefab;
+    public Transform spawnPoint;
+    public Transform objetoATeletransportar;
+
+    [Header("Parámetros de dificultad")]
     public float dificultad;
+    public float intervaloTeletransporte;
+    public float tiempoEntreBalas;
 
-    public GameObject proyectilPrefab; // Referencia al prefab del proyectil
-    public Transform spawnPoint; // Punto de origen del disparo
-    public float fuerza = 10f; // Fuerza aplicada al proyectil
+    [Header("Disparo")]
+    public float fuerza = 10f;
 
-    public Transform objetoATeletransportar; // Objeto que se teletransportará
-    public float intervaloTeletransporte; // Intervalo de tiempo entre teletransportes
-    private float rangoXMinimo = -34f; // Valor mínimo de X
-    private float rangoXMaximo = 34f; // Valor máximo de X
+    [Header("Cámara")]
+    public Camera camara;
+    public float margen = 0.5f; // un poco de espacio para no salir del borde
 
-    public float tiempoEntreBalas; // Tiempo en segundos entre cada mensaje
-
-
-
-    
+    private float rangoXMinimo;
+    private float rangoXMaximo;
 
     private void Start()
     {
+        if (camara == null)
+            camara = Camera.main;
+
+        // Calcular límites iniciales según la cámara
+        ActualizarLimitesCamara();
+
+        // Iniciar corrutinas
         StartCoroutine(TP());
         StartCoroutine(EnviarBala());
-
     }
 
     private void Update()
     {
-        intervaloTeletransporte = PointSystem.GetComponent<PointSystem>().dificultad;
-        tiempoEntreBalas = PointSystem.GetComponent<PointSystem>().dificultad;
+        // Actualizar dificultad desde PointSystem
+        dificultad = PointSystem.GetComponent<PointSystem>().dificultad;
+        intervaloTeletransporte = dificultad;
+        tiempoEntreBalas = dificultad;
+
+        // Si la cámara cambia (por ejemplo, aspect ratio), recalculamos los límites
+        ActualizarLimitesCamara();
+    }
+
+    private void ActualizarLimitesCamara()
+    {
+        // Calcular los límites visibles en coordenadas del mundo
+        float mitadAlto = camara.orthographicSize;
+        float mitadAncho = mitadAlto * camara.aspect;
+
+        rangoXMinimo = camara.transform.position.x - mitadAncho + margen;
+        rangoXMaximo = camara.transform.position.x + mitadAncho - margen;
     }
 
     private IEnumerator TP()
@@ -55,31 +78,28 @@ public class Spawner : MonoBehaviour
 
     private void TeletransportarObjeto()
     {
-        // Genera una posición X aleatoria dentro del rango especificado
+        // Genera una posición X aleatoria dentro del rango visible de la cámara
         float posicionXAleatoria = Random.Range(rangoXMinimo, rangoXMaximo);
 
-        // Obtiene la posición actual del objeto
+        // Actualiza la posición del objeto en X
         Vector3 nuevaPosicion = objetoATeletransportar.position;
-
-        // Actualiza la posición X con el valor aleatorio
         nuevaPosicion.x = posicionXAleatoria;
 
-        // Teletransporta el objeto a la nueva posición
+        // Teletransporta el objeto
         objetoATeletransportar.position = nuevaPosicion;
     }
 
-    void DispararProyectil()
+    private void DispararProyectil()
     {
         // Instanciar un nuevo proyectil en el punto de origen
         GameObject newProyectil = Instantiate(proyectilPrefab, spawnPoint.position, spawnPoint.rotation);
 
-        // Obtener el componente Rigidbody del proyectil
+        // Aplicar fuerza si tiene Rigidbody
         Rigidbody rb = newProyectil.GetComponent<Rigidbody>();
-
-        // Verificar si existe un Rigidbody y aplicarle una fuerza usando AddForce
         if (rb != null)
         {
             rb.AddForce(spawnPoint.forward * fuerza, ForceMode.Impulse);
         }
     }
 }
+
